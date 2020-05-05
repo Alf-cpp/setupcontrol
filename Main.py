@@ -46,10 +46,10 @@ while(True):
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
         trig.trigger()
-        time.sleep(0.2)
+        time.sleep(0.4)
         trig.settingsShutterOpen()
         trig.trigger()
-        time.sleep(0.1)
+        time.sleep(0.4)
 
     if key == ord('a'):
         icCam.startLiveMode()

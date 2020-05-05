@@ -22,7 +22,7 @@ class ISCamera():
         print("Gain Value set:      ",self.Camera.SetPropertyValue("Gain","Value",0))       # Gain auf 0
         print("Brightness Value Set:",self.Camera.SetPropertyValue("Brightness","Value", 0))# Brightness auch auf 0 (=BlackLevel)
         print("Exposure Auto off:   ",self.Camera.SetPropertySwitch("Exposure","Auto",0))
-        print("Exposure Value set:  ",self.Camera.SetPropertyAbsoluteValue("Exposure","Value",0.001)) #Exposure time in seconds
+        print("Exposure Value set:  ",self.Camera.SetPropertyAbsoluteValue("Exposure","Value",0.002)) #Exposure time in seconds
 
         # Für Callback:
         self.ImProc = ImageProcessing()

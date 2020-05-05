@@ -23,7 +23,7 @@ class Trigger():
         self.serialObject.write(b'dlay3,2,1e-3\n')   
         #Kamera:
         self.serialObject.write(b'dlay4,0,25e-3\n')
-        self.serialObject.write(b'dlay5,4,10e-3\n')    
+        self.serialObject.write(b'dlay5,4,20e-3\n')    
 
     def settingsShutterOpen(self):
         self.serialObject.write(b'dlay6,0,0\n')
@@ -56,4 +56,6 @@ class Trigger():
         self.serialObject.write(b'dlay3,2,1e-3\n')   
         #Kamera:
         self.serialObject.write(b'dlay4,0,0\n')
-        self.serialObject.write(b'dlay5,4,10e-3\n')    
+        self.serialObject.write(b'dlay5,4,10e-3\n')   
+        #Trigger Line:
+        self.serialObject.write(b'tsrc6\n') 
