@@ -35,7 +35,7 @@ class ImageProcessing():
             if self.Counter==0:
                 cv2.imshow('TriggerPicture_1',image)
                 self.Image_01 = image
-                #cv2.waitKey(1)
+                cv2.waitKey(1)
                 self.Counter = self.Counter +1
 
             elif self.Counter==1:
@@ -44,6 +44,7 @@ class ImageProcessing():
                 self.DiffImage = self.Image_01-self.Image_02
                 cv2.imshow('DifferenceImage',self.DiffImage)
                 self.Counter = 0
+                cv2.waitKey(1)
         elif self.TriggerMode == 0:
             cv2.imshow('Continuous', image)
 

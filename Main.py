@@ -36,8 +36,8 @@ def setBrightness(x):
 #OptionWindow with Trackbars:
 img = np.zeros((1,1,3), np.uint8)
 cv2.namedWindow('OptionWindow', cv2.WINDOW_NORMAL)
-cv2.createTrackbar('Gain','OptionWindow',0,480, setGain)                # dB/100 = Gain (max 48 dB)
-cv2.createTrackbar('Brightness','OptionWindow',0,511, setBrightness)    # Max = 511, Default normalerweise 240...
+cv2.createTrackbar('Gain','OptionWindow',280,480, setGain)                # dB/100 = Gain (max 48 dB)
+cv2.createTrackbar('Brightness','OptionWindow',240,511, setBrightness)    # Max = 511, Default normalerweise 240...
 cv2.imshow('OptionWindow',img)
 while(True):
     key = cv2.waitKey(1) & 0xFF
@@ -45,11 +45,14 @@ while(True):
         icCam.triggerSettings()
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
+        time.sleep(0.1)
         trig.trigger()
         time.sleep(0.4)
         trig.settingsShutterOpen()
+        time.sleep(0.1)
         trig.trigger()
         time.sleep(0.4)
+        #icCam.getImprocPictures()
 
     if key == ord('a'):
         icCam.startLiveMode()

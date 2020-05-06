@@ -19,10 +19,10 @@ class ISCamera():
         print("Continuous Mode OFF: ",self.Camera.SetContinuousMode(0))
         self.Camera.StartLive(0)
         print("Gain Auto off:       ",self.Camera.SetPropertySwitch("Gain","Auto",0))       # Gain Manuell einstellen
-        print("Gain Value set:      ",self.Camera.SetPropertyValue("Gain","Value",0))       # Gain auf 0
-        print("Brightness Value Set:",self.Camera.SetPropertyValue("Brightness","Value", 0))# Brightness auch auf 0 (=BlackLevel)
+        print("Gain Value set:      ",self.Camera.SetPropertyValue("Gain","Value",280))       # Gain auf 0
+        print("Brightness Value Set:",self.Camera.SetPropertyValue("Brightness","Value", 240))# Brightness auch auf 0 (=BlackLevel)
         print("Exposure Auto off:   ",self.Camera.SetPropertySwitch("Exposure","Auto",0))
-        print("Exposure Value set:  ",self.Camera.SetPropertyAbsoluteValue("Exposure","Value",0.002)) #Exposure time in seconds
+        print("Exposure Value set:  ",self.Camera.SetPropertyAbsoluteValue("Exposure","Value",0.01)) #Exposure time in seconds
 
         # Für Callback:
         self.ImProc = ImageProcessing()
@@ -44,12 +44,15 @@ class ISCamera():
         self.Camera.StartLive(0)
         print("Trigger Mode ON:     ",self.Camera.SetPropertySwitch("Trigger","Enable",1))   
         print("Trigger rising Edge: ",self.Camera.SetPropertySwitch("Trigger","Polarity",1))
-        print("Trigger Debounce Set:",self.Camera.SetPropertyAbsoluteValue("Trigger","Debounce Time",10000))    #10ms debounce time
+        print("Trigger Debounce Set:",self.Camera.SetPropertyAbsoluteValue("Trigger","Debounce Time",1000))    #1ms debounce time
 
     def startLiveMode(self):
         self.ImProc.setTriggerMode(0)
-        print("Trigger Mode OFF:     ",self.Camera.SetPropertySwitch("Trigger","Enable",0))  
-        self.Camera.SetFrameRate(30.0)
+        #print("Trigger Mode OFF:     ",self.Camera.SetPropertySwitch("Trigger","Enable",0))  
+        #self.Camera.SetFrameRate(30.0)
+        print("Trigger Mode ON:     ",self.Camera.SetPropertySwitch("Trigger","Enable",1))   
+        print("Trigger rising Edge: ",self.Camera.SetPropertySwitch("Trigger","Polarity",1))
+        print("Trigger Debounce Set:",self.Camera.SetPropertyAbsoluteValue("Trigger","Debounce Time",1000))    #1ms debounce time
         self.Camera.StartLive(0)                            #1: Video wird gezeigt, 0: Video wird nicht gezeigt (gestartet wird dennoch)
 
     def snapImg(self):
@@ -77,11 +80,11 @@ class ISCamera():
             print("Gain Error:      ",error)
 
         BrightnessValue=[0]
-        error = self.Camera.GetPropertyAbsoluteValue("Brightness","Value",BrightnessValue)  #Funktioniert nicht, warum???
-        if error==1:
-            print("Brightness Value:", BrightnessValue[0])
-        else:
-            print("Brightness Error:",error)
+        #error = self.Camera.GetPropertyAbsoluteValue("Brightness","Value",BrightnessValue)  #Funktioniert nicht, warum???
+        #if error==1:
+        #    print("Brightness Value:", BrightnessValue[0])
+        #else:
+        #    print("Brightness Error:",error)
 
         ExposureTime=[0]
         error = self.Camera.GetPropertyAbsoluteValue("Exposure","Value",ExposureTime)
@@ -89,6 +92,11 @@ class ISCamera():
             print("Exposure Value:  ", ExposureTime[0])
         else:
             print("Exposure Error:  ",error)
+
+    def getImprocPictures(self):
+        picture1 = self.ImProc.getImage_01
+        picture2 = self.ImProc.getImage_02
+        diffImg = self.ImProc.getDiffImage
 
     def Callback(self, hGrabber, pBuffer, framenumber, pData):
         """:param: hGrabber: This is the real pointer to the grabber object.

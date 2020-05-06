@@ -22,14 +22,16 @@ class Trigger():
         self.serialObject.write(b'dlay2,0,26e-3\n')
         self.serialObject.write(b'dlay3,2,1e-3\n')   
         #Kamera:
-        self.serialObject.write(b'dlay4,0,25e-3\n')
-        self.serialObject.write(b'dlay5,4,20e-3\n')    
+        self.serialObject.write(b'dlay4,0,20e-3\n')
+        self.serialObject.write(b'dlay5,4,4e-3\n')    
 
     def settingsShutterOpen(self):
+        self.serialObject.write(b'lpol3,1\n')
         self.serialObject.write(b'dlay6,0,0\n')
-        self.serialObject.write(b'dlay7,0,0.1\n')
+        self.serialObject.write(b'dlay7,0,0.2\n')
 
     def settingsShutterClosed(self):    #eventuell gibt es eine Feinere Art den Ausgang auf 0 zu setzten?
+        self.serialObject.write(b'lpol3,1\n')
         self.serialObject.write(b'dlay6,0,0\n')
         self.serialObject.write(b'dlay7,6,0\n')
 
@@ -50,12 +52,13 @@ class Trigger():
     def setContinous(self):
         #Shutter auf 0 setzten... muss vorerst von Hand auf 1 gesetzt werden 
         self.serialObject.write(b'dlay6,0,0\n')
-        self.serialObject.write(b'dlay7,6,0\n')
+        self.serialObject.write(b'dlay7,0,0\n')
+        self.serialObject.write(b'lpol3,0\n')
         #Laser
-        self.serialObject.write(b'dlay2,0,1e-6\n')
+        self.serialObject.write(b'dlay2,0,5e-3\n')
         self.serialObject.write(b'dlay3,2,1e-3\n')   
         #Kamera:
         self.serialObject.write(b'dlay4,0,0\n')
-        self.serialObject.write(b'dlay5,4,10e-3\n')   
+        self.serialObject.write(b'dlay5,4,4e-3\n')   
         #Trigger Line:
         self.serialObject.write(b'tsrc6\n') 
