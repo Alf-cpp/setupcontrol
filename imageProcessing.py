@@ -43,9 +43,6 @@ class ImageProcessing():
                 self.Image_02 = image
                 self.DiffImage = cv2.absdiff(self.Image_01, self.Image_02)
                 cv2.imshow('DifferenceImage',self.DiffImage)
-                cv2.imwrite('C:\\Master\\Pictures\\diffimg.jpg',self.DiffImage)
-                cv2.imwrite('C:\\Master\\Pictures\\pic1.jpg',self.Image_01)
-                cv2.imwrite('C:\\Master\\Pictures\\pic2.jpg',self.Image_02)
                 self.Counter = 0
                 cv2.waitKey(1)
         elif self.TriggerMode == 0:
