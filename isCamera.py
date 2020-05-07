@@ -80,12 +80,6 @@ class ISCamera():
             print("Gain Error:      ",error)
 
         BrightnessValue=[0]
-        #error = self.Camera.GetPropertyAbsoluteValue("Brightness","Value",BrightnessValue)  #Funktioniert nicht, warum???
-        #if error==1:
-        #    print("Brightness Value:", BrightnessValue[0])
-        #else:
-        #    print("Brightness Error:",error)
-
         ExposureTime=[0]
         error = self.Camera.GetPropertyAbsoluteValue("Exposure","Value",ExposureTime)
         if error==1:

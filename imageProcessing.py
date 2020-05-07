@@ -10,6 +10,7 @@ class ImageProcessing():
         self.Counter =0
         self.PointCounter = 0
         self.TriggerMode = -1
+        self.filecounter = 0
         cv2.namedWindow('DifferenceImage', cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback('DifferenceImage',self.getMousePos)
     def test(self):
@@ -39,10 +40,12 @@ class ImageProcessing():
                 self.Counter = self.Counter +1
 
             elif self.Counter==1:
+                self.X = 0
                 cv2.imshow('TriggerPicture_2',image)
                 self.Image_02 = image
                 self.DiffImage = cv2.absdiff(self.Image_01, self.Image_02)
                 cv2.imshow('DifferenceImage',self.DiffImage)
+                #cv2.imwrite('C:\\Master\\Pictures\\' + 'Diffimg.jpg' + str(self.filecounter) + 'jpg' , self.DiffImage)
                 self.Counter = 0
                 cv2.waitKey(1)
         elif self.TriggerMode == 0:
@@ -54,6 +57,12 @@ class ImageProcessing():
         return self.Image_02
     def getDiffImage(self):
         return self.DiffImage
+
+    def saveImg(self, imagePath):
+        cv2.imwrite('C:\\Master\\Pictures\\' + 'Diffimg' + str(self.filecounter) + '.png' , self.DiffImage)
+        cv2.imwrite(imagePath + 'BGimg'+ str(self.filecounter) + '.png' ,self.Image_01)
+        cv2.imwrite(imagePath + 'WVimg'+ str(self.filecounter) + '.png' ,self.Image_02)
+        self.filecounter = self.filecounter +1
 
     def getMousePos(self,event,x,y,flags,param):
         if event == cv2.EVENT_LBUTTONDOWN:

@@ -54,10 +54,7 @@ while(True):
         time.sleep(0.4)
         #icCam.getImprocPictures()
     if key == ord('s'):
-        cv2.imwrite(imagePath + 'Diffimg.jpg' + str(filecounter) + 'jpg' ,icCam.ImProc.getDiffImage)
-        cv2.imwrite(imagePath + 'BGimg.jpg'+ str(filecounter) + 'jpg' ,icCam.ImProc.getImage_01)
-        cv2.imwrite(imagePath + 'WVimg.jpg'+ str(filecounter) + 'jpg' ,icCam.ImProc.getImage_02)
-        filecounter = filecounter +1
+        icCam.ImProc.saveImg(imagePath)        
     if key == ord('a'):
         icCam.startLiveMode()
         trig.setContinous()
