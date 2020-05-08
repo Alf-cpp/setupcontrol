@@ -10,10 +10,15 @@ class Trigger():
         print(self.serialObject.name)
 
     def trigger(self):
-        self.serialObject.write(b'*trg\n')
+        self.serialObject.write(b'*trg\n')  
 
     def resetSettings(self):
-        self.serialObject.write(b'*rst\n')
+        self.serialObject.write(b'*rst\n')  #Reset all settings
+        # Level der Trigger richtig setzten, da durch Reset alle auf 2.5V gesetzt wurden
+        self.serialObject.write(b'LAMP1,5\n')
+        self.serialObject.write(b'LAMP2,5\n')
+        self.serialObject.write(b'LAMP3,5\n')
+        self.serialObject.write(b'LAMP4,3.33\n')
 
     def singleTriggerSettings(self):
         self.serialObject.write(b'tsrc5\n')
@@ -50,7 +55,6 @@ class Trigger():
         self.serialObject.write(b'dlay5,4,1e-3\n')  
 
     def setContinous(self):
-        #Shutter auf 0 setzten... muss vorerst von Hand auf 1 gesetzt werden 
         self.serialObject.write(b'dlay6,0,0\n')
         self.serialObject.write(b'dlay7,0,0\n')
         self.serialObject.write(b'lpol3,0\n')
@@ -61,4 +65,4 @@ class Trigger():
         self.serialObject.write(b'dlay4,0,0\n')
         self.serialObject.write(b'dlay5,4,4e-3\n')   
         #Trigger Line:
-        self.serialObject.write(b'tsrc6\n') 
+        self.serialObject.write(b'tsrc6\n')

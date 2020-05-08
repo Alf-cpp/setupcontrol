@@ -20,14 +20,15 @@ class ImageProcessing():
     def setTriggerMode(self, triggerMode):
         self.TriggerMode = triggerMode
         if self.TriggerMode == 1:   #trigger Modus
-            #cv2.namedWindow('TriggerPicture_1', cv2.WINDOW_NORMAL)
-            #cv2.namedWindow('TriggerPicture_2', cv2.WINDOW_NORMAL)
+            cv2.namedWindow('TriggerPicture_1', cv2.WINDOW_NORMAL)
+            cv2.namedWindow('TriggerPicture_2', cv2.WINDOW_NORMAL)
+            cv2.namedWindow('DifferenceImage', cv2.WINDOW_NORMAL)
             cv2.destroyWindow('Continuous')
         elif self.TriggerMode == 0: #continuous Modus
             cv2.destroyWindow('TriggerPicture_1')
             cv2.destroyWindow('TriggerPicture_2')
             cv2.destroyWindow('DifferenceImage')
-            #cv2.namedWindow('Continuous', cv2.WINDOW_NORMAL)
+            cv2.namedWindow('Continuous', cv2.WINDOW_NORMAL)
         else:
             cv2.destroyWindow('Continuous')
             cv2.destroyWindow('TriggerPicture_1')
@@ -60,12 +61,12 @@ class ImageProcessing():
         return self.DiffImage
 
     def saveImg(self, imagePath):
-        cv2.imwrite('C:\\Master\\Pictures\\' + 'Diffimg' + str(self.filecounter) + '.png' , self.DiffImage)
+        cv2.imwrite(imagePath + 'Diffimg' + str(self.filecounter) + '.png' , self.DiffImage)
         cv2.imwrite(imagePath + 'BGimg'+ str(self.filecounter) + '.png' ,self.Image_01)
         cv2.imwrite(imagePath + 'WVimg'+ str(self.filecounter) + '.png' ,self.Image_02)
         self.filecounter = self.filecounter +1
 
-    def getMousePos(self,event,x,y,flags,param):
+    def getMousePos(self,event,x,y,flags,param):    # diese Funktion geht nur beim ersten mal im Triggermodus. Ändert man auf Continuous und zurück in Trigger funktioniert sie nicht mehr
         if event == cv2.EVENT_LBUTTONDOWN:
             print('X:', x,'Y:',y,'Value:',self.DiffImage[x,y])
             if self.PointCounter==0:

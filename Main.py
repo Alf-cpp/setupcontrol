@@ -23,7 +23,7 @@ icCam = ISCamera()
 icCam.printParams()
 
 #Einstellung der Dateipfae zum Laden und Abspeichern von Bildern
-imagePath = 'C:\\Master\\Pictures\\'
+imagePath = 'O:\\ou-mt\\Mitarbeiter\\Albert\\Pictures\\'
 filecounter = 0
 #Callbackfunction for Trackbars:
 def setGain(x):
@@ -42,6 +42,7 @@ cv2.imshow('OptionWindow',img)
 while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('t'):
+        icCam.stopLive()
         icCam.triggerSettings()
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
@@ -56,6 +57,7 @@ while(True):
     if key == ord('s'):
         icCam.ImProc.saveImg(imagePath)        
     if key == ord('a'):
+        icCam.stopLive()
         icCam.startLiveMode()
         trig.setContinous()
     if key == ord('q'):
