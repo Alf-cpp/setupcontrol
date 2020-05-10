@@ -15,10 +15,10 @@ class Trigger():
     def resetSettings(self):
         self.serialObject.write(b'*rst\n')  #Reset all settings
         # Level der Trigger richtig setzten, da durch Reset alle auf 2.5V gesetzt wurden
-        self.serialObject.write(b'LAMP1,5\n')
-        self.serialObject.write(b'LAMP2,5\n')
-        self.serialObject.write(b'LAMP3,5\n')
-        self.serialObject.write(b'LAMP4,3.33\n')
+        self.serialObject.write(b'LAMP1,5\n') # 5V TTL Laser
+        self.serialObject.write(b'LAMP2,5\n') # 5V TTL ISKamera
+        self.serialObject.write(b'LAMP3,5\n') # 5V TTL Shutter
+        self.serialObject.write(b'LAMP4,3.33\n') # 3.33V TTL ThorLabs Kamera
 
     def singleTriggerSettings(self):
         self.serialObject.write(b'tsrc5\n')
