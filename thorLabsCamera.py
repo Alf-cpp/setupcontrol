@@ -48,7 +48,9 @@ class TLCamera():
         self.camera.operation_mode = OPERATION_MODE.HARDWARE_TRIGGERED # set Hardwaretrigger
         self.camera.trigger_polarity = TRIGGER_POLARITY.ACTIVE_HIGH # Trigger auf active HIGH
         self.camera.exposure_time_us = 1000
-        print("Exposure Time :",self.camera.exposure_time_us,"\n")   
+        print("Exposure Time :",self.camera.exposure_time_us)
+        print(self.camera.operation_mode)
+        print(self.camera.trigger_polarity)   
         self.camera.arm(1)                   
 
     def setGain(self, value):
