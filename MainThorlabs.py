@@ -20,6 +20,8 @@ trig.settingsShutterClosed()
 
 #Kamera hier erstellen und Einstellungen vornehmen
 tlCam = TLCamera()
+time.sleep(1)
+tlCam.closeCamera()
 
 #Einstellung der Dateipfae zum Laden und Abspeichern von Bildern
 imagePath = 'O:\\ou-mt\\Mitarbeiter\\Albert\\Pictures\\'
