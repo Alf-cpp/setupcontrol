@@ -53,13 +53,14 @@ while(True):
         trig.trigger()
         time.sleep(0.4)
         #icCam.getImprocPictures()
-    if key == ord('s'):
+    #if key == ord('s'):
         #icCam.ImProc.saveImg(imagePath)        
     if key == ord('a'):
         #icCam.stopLive()
         #icCam.startLiveMode()
         trig.setContinous()
     if key == ord('q'):
+        tlCam.closeCamera()
         break
 
 # When everything done, release the capture

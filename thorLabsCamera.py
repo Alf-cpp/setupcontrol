@@ -20,6 +20,8 @@ except ImportError:
 
 from thorlabs_tsi_sdk.tl_camera import TLCameraSDK, TLCamera, Frame
 from thorlabs_tsi_sdk.tl_camera_enums import SENSOR_TYPE
+from thorlabs_tsi_sdk.tl_camera_enums import OPERATION_MODE
+from thorlabs_tsi_sdk.tl_camera_enums import TRIGGER_POLARITY
 from thorlabs_tsi_sdk.tl_mono_to_color_processor import MonoToColorProcessorSDK
 
 NUMBER_OF_IMAGES = 10  # Number of TIFF images to be saved
@@ -36,12 +38,16 @@ if os.path.exists(OUTPUT_DIRECTORY + os.sep + FILENAME):
 class TLCamera():
     def __init__(self):
         #open camera and setup settings:
-        with TLCameraSDK() as sdk:
-            cameras = sdk.discover_available_cameras()
-            if len(cameras) == 0:
-                print("Error: no cameras detected!")
+        camera = TLCameraSDK()
+        cameras = camera.discover_available_cameras()
+        if len(cameras) == 0:
+            print("Error: no cameras detected!")
 
-        self.camera = sdk.open_camera(cameras[0])
+        self.camera = camera.open_camera(cameras[0])
+        self.camera.frames_per_trigger_zero_for_unlimited = 1
+        self.camera.operation_mode(OPERATION_MODE.HARDWARE_TRIGGERED)   #set Hardwaretrigger
+        self.camera.trigger_polarity(TRIGGER_POLARITY.ACTIVE_HIGH) 
+        self.camera.arm()
         
 
     def setGain(self, value):
@@ -49,3 +55,7 @@ class TLCamera():
 
     def setBrightness(self, value):
         print("Error, there is no such setting for this Camera")
+
+    def closeCamera(self):
+        self.camera.disarm()
+        self.camera.dispose()
