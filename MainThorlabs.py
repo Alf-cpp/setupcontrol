@@ -19,6 +19,7 @@ trig.singleTriggerSettings()
 trig.settingsShutterClosed()
 
 #Kamera hier erstellen und Einstellungen vornehmen
+
 tlCam = TLCamera()
 time.sleep(1)
 tlCam.closeCamera()

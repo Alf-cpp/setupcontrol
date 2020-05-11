@@ -185,8 +185,10 @@ if __name__ == "__main__":
             camera_widget = LiveViewCanvas(parent=root, image_queue=image_acquisition_thread.get_output_queue())
 
             print("Setting camera parameters...")
-            camera.frames_per_trigger_zero_for_unlimited = 0
+            camera.frames_per_trigger_zero_for_unlimited = 1
+            camera.operation_mode=1
             camera.arm(2)
+            
             camera.issue_software_trigger()
 
             print("Starting image acquisition thread...")
