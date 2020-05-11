@@ -11,8 +11,7 @@ This example uses threading to enqueue images coming off the camera in one threa
 dequeue them in the UI thread for quick displaying.
 
 """
-import os
-os.environ['PATH'] = os.path.dirname(__file__) + ';' + os.environ['PATH']
+
 import sys 
 sys.path.append("./")
 
