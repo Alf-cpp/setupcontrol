@@ -5,6 +5,7 @@ import cv2
 import time 
 import serial
 import tisgrabber as IC
+from thorLabsCamera import TLCamera
 import numpy as np
 from trigger import Trigger
 import datetime
@@ -18,7 +19,7 @@ trig.singleTriggerSettings()
 trig.settingsShutterClosed()
 
 #Kamera hier erstellen und Einstellungen vornehmen
-
+tlCam = TLCamera()
 
 #Einstellung der Dateipfae zum Laden und Abspeichern von Bildern
 imagePath = 'O:\\ou-mt\\Mitarbeiter\\Albert\\Pictures\\'
