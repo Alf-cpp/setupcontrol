@@ -21,12 +21,11 @@ trig.settingsShutterClosed()
 #Kamera hier erstellen und Einstellungen vornehmen
 
 tlCam = TLCamera()
-time.sleep(1)
-tlCam.closeCamera()
 
 #Einstellung der Dateipfae zum Laden und Abspeichern von Bildern
 imagePath = 'O:\\ou-mt\\Mitarbeiter\\Albert\\Pictures\\'
 filecounter = 0
+
 #Callbackfunction for Trackbars:
 def setGain(x):
     gain=cv2.getTrackbarPos('Gain','OptionWindow')
@@ -41,20 +40,26 @@ cv2.namedWindow('OptionWindow', cv2.WINDOW_NORMAL)
 cv2.createTrackbar('Gain','OptionWindow',280,480, setGain)                # dB/100 = Gain (max 48 dB)
 cv2.createTrackbar('Brightness','OptionWindow',240,511, setBrightness)    # Max = 511, Default normalerweise 240...
 cv2.imshow('OptionWindow',img)
+
 while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('t'):
-        #icCam.stopLive()
-        #icCam.triggerSettings()
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
-        time.sleep(0.1)
         trig.trigger()
-        time.sleep(0.4)
-        trig.settingsShutterOpen()
-        time.sleep(0.1)
         trig.trigger()
-        time.sleep(0.4)
+        tlCam.snapImg()
+        #icCam.stopLive()
+        #icCam.triggerSettings()
+        #trig.singleTriggerSettings()
+        #trig.settingsShutterClosed()
+        #time.sleep(0.1)
+        #trig.trigger()
+        #time.sleep(0.4)
+        #trig.settingsShutterOpen()
+        #time.sleep(0.1)
+        #trig.trigger()
+        #time.sleep(0.4)
         #icCam.getImprocPictures()
     #if key == ord('s'):
         #icCam.ImProc.saveImg(imagePath)        
