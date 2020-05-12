@@ -38,10 +38,7 @@ filecounter = 0
 #Callbackfunction for Trackbars:
 def setGain(x):
     gain=cv2.getTrackbarPos('Gain','OptionWindow')
-    #icCam.setGain(gain)
-def setBrightness(x):
-    brightness=cv2.getTrackbarPos('Brightness','OptionWindow')
-    #icCam.setBrightness(brightness)
+    tlCam.setGain(gain)
 
 #OptionWindow with Trackbars:
 img = np.zeros((1,1,3), np.uint8)
@@ -53,6 +50,7 @@ cv2.imshow('OptionWindow',img)
 while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('t'):
+        tlCam.setSingleTriggerMode()
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
         trig.trigger()
@@ -63,9 +61,18 @@ while(True):
     if key == ord('s'):
         tlCam.saveImage(OUTPUT_DIRECTORY)     
     if key == ord('a'):
-        #icCam.stopLive()
-        #icCam.startLiveMode()
         trig.setContinous()
+        tlCam.setContinuousTriggerMode()
+        tlCam.snapImg()
+        time.sleep(0.01)
+        tlCam.snapImg()
+        while(True):
+            key = cv2.waitKey(1) & 0xFF
+            tlCam.snapImg()
+            time.sleep(0.01)
+            if key == ord('q'):
+                key=1
+                break
     if key == ord('q'):
         tlCam.closeCamera()
         break

@@ -70,7 +70,7 @@ class Trigger():
         self.serialObject.write(b'dlay4,0,0\n')
         self.serialObject.write(b'dlay5,4,4e-3\n')
         #Thor_Camera:
-        self.serialObject.write(b'dlay8,0,20e-3\n')
+        self.serialObject.write(b'dlay8,0,0e-3\n')
         self.serialObject.write(b'dlay9,8,4e-3\n')       
         #Trigger Line:
         self.serialObject.write(b'tsrc6\n')

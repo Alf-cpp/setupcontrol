@@ -34,6 +34,7 @@ class TLCamera():
         #variables
         self.FILECOUNTER = 0
         self.counter = 0 # 0 = background Image ; 1 = wave Image
+        self.singleTriggerMode = True
 
         #open camera and setup settings:
         self.sdk = TLCameraSDK()
@@ -51,13 +52,23 @@ class TLCamera():
         print(self.camera.operation_mode)
         print(self.camera.trigger_polarity)
         self.camera.image_poll_timeout_ms = 1000  # 1 second timeout   
-        self.camera.arm(10)
+        self.camera.arm(2)
+
+    def setSingleTriggerMode(self):
+        self.singleTriggerMode = True
+        cv2.destroyWindow('Live')
+        self.camera.image_poll_timeout_ms = 1000  # 1 second timeout
+
+    def setContinuousTriggerMode(self):
+        self.singleTriggerMode = False
+        cv2.destroyWindow('BGimg')
+        cv2.destroyWindow('WVimg')
+        cv2.destroyWindow('DifferenceImage')
+        self.camera.image_poll_timeout_ms = 1000
 
     def setGain(self, value):
-        self.camera.exposure_time_us(value) #set exposure time in us
-
-    def setBrightness(self, value):
-        print("Error, there is no such setting for this Camera")
+        self.camera.gain(value)
+        self.camera.
 
     def snapImg(self):
         frame = self.camera.get_pending_frame_or_null()
@@ -79,18 +90,21 @@ class TLCamera():
         print(self.camera.trigger_polarity)
 
     def showImage(self, image):
-        if self.counter==0:
-            self.BGimg = image
-            cv2.imshow("BGimg",self.BGimg)
-            cv2.waitKey(1)
-            self.counter=1
+        if self.singleTriggerMode == True:
+            if self.counter==0:
+                self.BGimg = image
+                cv2.imshow("BGimg",self.BGimg)
+                cv2.waitKey(1)
+                self.counter=1
+            else:
+                self.WVimg = image
+                cv2.imshow("WVimg",self.WVimg)
+                self.Diffimg = cv2.absdiff(self.BGimg, self.WVimg)
+                cv2.imshow('DifferenceImage',self.Diffimg)
+                cv2.waitKey(1)
+                self.counter=0
         else:
-            self.WVimg = image
-            cv2.imshow("WVimg",self.WVimg)
-            self.Diffimg = cv2.absdiff(self.BGimg, self.WVimg)
-            cv2.imshow('DifferenceImage',self.Diffimg)
-            cv2.waitKey(1)
-            self.counter=0
+            cv2.imshow("Live", image)
 
     def saveImage(self, output_directory):
         tiff = tifffile.TiffWriter(output_directory + os.sep + "BGimg"+str(self.FILECOUNTER)+".tif", append=True)
