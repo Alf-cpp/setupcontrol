@@ -9,8 +9,17 @@ from thorLabsCamera import TLCamera
 import numpy as np
 from trigger import Trigger
 import datetime
+import os
 
 print('#########################',datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'################################')
+
+#Directory
+# delete image if it exists
+OUTPUT_DIRECTORY = os.path.abspath(r'.\pictures')  # Directory the TIFFs will be saved to
+FILENAME = 'image'  # The filename of the TIFF
+
+if os.path.exists(OUTPUT_DIRECTORY + os.sep + FILENAME):
+    os.remove(OUTPUT_DIRECTORY + os.sep + FILENAME)
 
 #Trigger
 trig = Trigger()
@@ -47,22 +56,12 @@ while(True):
         trig.singleTriggerSettings()
         trig.settingsShutterClosed()
         trig.trigger()
+        tlCam.snapImg()
+        trig.settingsShutterOpen()
         trig.trigger()
         tlCam.snapImg()
-        #icCam.stopLive()
-        #icCam.triggerSettings()
-        #trig.singleTriggerSettings()
-        #trig.settingsShutterClosed()
-        #time.sleep(0.1)
-        #trig.trigger()
-        #time.sleep(0.4)
-        #trig.settingsShutterOpen()
-        #time.sleep(0.1)
-        #trig.trigger()
-        #time.sleep(0.4)
-        #icCam.getImprocPictures()
-    #if key == ord('s'):
-        #icCam.ImProc.saveImg(imagePath)        
+    if key == ord('s'):
+        tlCam.saveImage(OUTPUT_DIRECTORY)     
     if key == ord('a'):
         #icCam.stopLive()
         #icCam.startLiveMode()

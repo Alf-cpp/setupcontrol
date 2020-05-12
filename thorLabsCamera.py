@@ -11,6 +11,8 @@ from imageProcessing import ImageProcessing
 import os
 import tifffile
 
+
+
 try:
     # if on Windows, use the provided setup script to add the DLLs folder to the PATH
     from windows_setup import configure_path
@@ -24,21 +26,15 @@ from thorlabs_tsi_sdk.tl_camera_enums import OPERATION_MODE
 from thorlabs_tsi_sdk.tl_camera_enums import TRIGGER_POLARITY
 from thorlabs_tsi_sdk.tl_mono_to_color_processor import MonoToColorProcessorSDK
 
-NUMBER_OF_IMAGES = 10  # Number of TIFF images to be saved
-OUTPUT_DIRECTORY = os.path.abspath(r'.')  # Directory the TIFFs will be saved to
-FILENAME = 'image'  # The filename of the TIFF
-
-
 TAG_BITDEPTH = 32768
 TAG_EXPOSURE = 32769
 
-# delete image if it exists
-if os.path.exists(OUTPUT_DIRECTORY + os.sep + FILENAME):
-    os.remove(OUTPUT_DIRECTORY + os.sep + FILENAME)
-
 class TLCamera():
     def __init__(self):
+        #variables
         self.FILECOUNTER = 0
+        self.counter = 0 # 0 = background Image ; 1 = wave Image
+
         #open camera and setup settings:
         self.sdk = TLCameraSDK()
         cameras = self.sdk.discover_available_cameras()
@@ -64,17 +60,12 @@ class TLCamera():
         print("Error, there is no such setting for this Camera")
 
     def snapImg(self):
-        self.tiff = tifffile.TiffWriter(OUTPUT_DIRECTORY + os.sep + FILENAME+str(self.FILECOUNTER)+".tif", append=True)
         frame = self.camera.get_pending_frame_or_null()
         if frame is None:
             raise TimeoutError("Timeout was reached while polling for a frame, program will now exit")
         image_data = frame.image_buffer
-        self.tiff.save(data=image_data,  # np.ushort image data array from the camera
-                  compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
-                  extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
-                             (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
-        )
-        self.FILECOUNTER = self.FILECOUNTER+1
+        #self.ImProc.imageProcess(self.image_data)
+        self.showImage(image_data)
 
     def closeCamera(self):
         self.camera.disarm()
@@ -86,3 +77,38 @@ class TLCamera():
         print("Bit Depth: ", self.camera.bit_depth)
         print(self.camera.operation_mode)
         print(self.camera.trigger_polarity)
+
+    def showImage(self, image):
+        if self.counter==0:
+            self.BGimg = image
+            cv2.imshow("BGimg",self.BGimg)
+            cv2.waitKey(1)
+            self.counter=1
+        else:
+            self.WVimg = image
+            cv2.imshow("WVimg",self.WVimg)
+            self.Diffimg = cv2.absdiff(self.BGimg, self.WVimg)
+            cv2.imshow('DifferenceImage',self.Diffimg)
+            cv2.waitKey(1)
+            self.counter=0
+
+    def saveImage(self, output_directory):
+        tiff = tifffile.TiffWriter(output_directory + os.sep + "BGimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff.save(data=self.BGimg,  # np.ushort image data array from the camera
+                  compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
+                  extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
+                             (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
+        )
+        tiff = tifffile.TiffWriter(output_directory + os.sep + "WVimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
+                  compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
+                  extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
+                             (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
+        )
+        tiff = tifffile.TiffWriter(output_directory + os.sep + "Diffimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
+                  compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
+                  extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
+                             (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
+        )
+        self.FILECOUNTER=self.FILECOUNTER+1

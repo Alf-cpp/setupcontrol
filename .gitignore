@@ -9,6 +9,7 @@ pyvenv.cfg
 .venv
 .vscode
 old
+pictures
 ISCode
 tkInter
 __pycache__

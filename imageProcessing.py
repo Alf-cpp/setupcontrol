@@ -61,9 +61,9 @@ class ImageProcessing():
         return self.DiffImage
 
     def saveImg(self, imagePath):
-        cv2.imwrite(imagePath + 'Diffimg' + str(self.filecounter) + '.png' , self.DiffImage)
-        cv2.imwrite(imagePath + 'BGimg'+ str(self.filecounter) + '.png' ,self.Image_01)
-        cv2.imwrite(imagePath + 'WVimg'+ str(self.filecounter) + '.png' ,self.Image_02)
+        cv2.imwrite(imagePath + 'Diffimg' + str(self.filecounter) + '.tiff' , self.DiffImage)
+        cv2.imwrite(imagePath + 'BGimg'+ str(self.filecounter) + '.tiff' ,self.Image_01)
+        cv2.imwrite(imagePath + 'WVimg'+ str(self.filecounter) + '.tiff' ,self.Image_02)
         self.filecounter = self.filecounter +1
 
     def getMousePos(self,event,x,y,flags,param):    # diese Funktion geht nur beim ersten mal im Triggermodus. Ändert man auf Continuous und zurück in Trigger funktioniert sie nicht mehr
