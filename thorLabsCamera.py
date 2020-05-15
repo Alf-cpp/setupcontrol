@@ -68,7 +68,6 @@ class TLCamera():
 
     def setGain(self, value):
         self.camera.gain(value)
-        self.camera.
 
     def snapImg(self):
         frame = self.camera.get_pending_frame_or_null()
@@ -107,19 +106,19 @@ class TLCamera():
             cv2.imshow("Live", image)
 
     def saveImage(self, output_directory):
-        tiff = tifffile.TiffWriter(output_directory + os.sep + "BGimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\BGimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "BGimg"+".tif", append=True)
         tiff.save(data=self.BGimg,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
                              (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
         )
-        tiff = tifffile.TiffWriter(output_directory + os.sep + "WVimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\WVimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "WVimg"+".tif", append=True)
         tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
                              (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
         )
-        tiff = tifffile.TiffWriter(output_directory + os.sep + "Diffimg"+str(self.FILECOUNTER)+".tif", append=True)
+        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\Diffimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "Diffimg"+".tif", append=True)
         tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth

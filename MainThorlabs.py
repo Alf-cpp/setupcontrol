@@ -13,6 +13,12 @@ import os
 
 print('#########################',datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),'################################')
 
+#Paths
+os.environ['PATH'] +=r'C:\Master\setupcontrol\dlls'+os.sep+'64_lib;'
+print(os.environ['PATH'])
+
+#_sdk = C.cdll.LoadLibrary("thorlabs_tsi_camera_sdk.dll")
+
 #Directory
 # delete image if it exists
 OUTPUT_DIRECTORY = os.path.abspath(r'.\pictures')  # Directory the TIFFs will be saved to
@@ -44,7 +50,6 @@ def setGain(x):
 img = np.zeros((1,1,3), np.uint8)
 cv2.namedWindow('OptionWindow', cv2.WINDOW_NORMAL)
 cv2.createTrackbar('Gain','OptionWindow',280,480, setGain)                # dB/100 = Gain (max 48 dB)
-cv2.createTrackbar('Brightness','OptionWindow',240,511, setBrightness)    # Max = 511, Default normalerweise 240...
 cv2.imshow('OptionWindow',img)
 
 while(True):
