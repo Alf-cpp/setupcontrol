@@ -44,9 +44,9 @@ class TLCamera():
 
         self.camera = self.sdk.open_camera(cameras[0])
         self.camera.frames_per_trigger_zero_for_unlimited = 1
-        self.camera.operation_mode = OPERATION_MODE.HARDWARE_TRIGGERED # set Hardwaretrigger
+        self.camera.operation_mode = OPERATION_MODE.BULB # set Hardwaretrigger
         self.camera.trigger_polarity = TRIGGER_POLARITY.ACTIVE_HIGH # Trigger auf active HIGH
-        self.camera.exposure_time_us = 10
+        #self.camera.exposure_time_us = 10
         print("Exposure Time :",self.camera.exposure_time_us)
         print("Bit Depth: ", self.camera.bit_depth)
         print(self.camera.operation_mode)

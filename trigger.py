@@ -23,14 +23,14 @@ class Trigger():
     def singleTriggerSettings(self):
         self.serialObject.write(b'tsrc5\n')
         #Laser
-        self.serialObject.write(b'dlay2,0,26e-3\n')
+        self.serialObject.write(b'dlay2,0,50e-3\n')
         self.serialObject.write(b'dlay3,2,1e-3\n')   
         #ImagingSource_Camera:
         self.serialObject.write(b'dlay4,0,20e-3\n')
         self.serialObject.write(b'dlay5,4,4e-3\n')
         #Thor_Camera:
-        self.serialObject.write(b'dlay8,0,20e-3\n')
-        self.serialObject.write(b'dlay9,8,4e-3\n')            
+        self.serialObject.write(b'dlay8,0,0e-3\n')
+        self.serialObject.write(b'dlay9,8,100e-3\n')            
 
     def settingsShutterOpen(self):
         self.serialObject.write(b'lpol3,1\n')
