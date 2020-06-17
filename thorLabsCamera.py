@@ -11,8 +11,6 @@ from imageProcessing import ImageProcessing
 import os
 import tifffile
 
-
-
 try:
     # if on Windows, use the provided setup script to add the DLLs folder to the PATH
     from windows_setup import configure_path
@@ -35,6 +33,8 @@ class TLCamera():
         self.FILECOUNTER = 0
         self.counter = 0 # 0 = background Image ; 1 = wave Image
         self.singleTriggerMode = True
+        self.maxIntensity=65536
+        self.minIntensity=0
 
         #open camera and setup settings:
         self.sdk = TLCameraSDK()
@@ -61,7 +61,8 @@ class TLCamera():
 
     def setContinuousTriggerMode(self):
         self.singleTriggerMode = False
-        cv2.destroyWindow('BGimg')
+        cv2.destroyWindow('BGimg_1')
+        cv2.destroyWindow('BGimg_2')
         cv2.destroyWindow('WVimg')
         cv2.destroyWindow('DifferenceImage')
         self.camera.image_poll_timeout_ms = 1000
@@ -91,37 +92,57 @@ class TLCamera():
     def showImage(self, image):
         if self.singleTriggerMode == True:
             if self.counter==0:
-                self.BGimg = image
-                cv2.imshow("BGimg",self.BGimg)
+                self.BGimg_1 = image
+                cv2.imshow("BGimg_1",self.BGimg_1)
                 cv2.waitKey(1)
                 self.counter=1
-            else:
+            elif self.counter==1:
                 self.WVimg = image
                 cv2.imshow("WVimg",self.WVimg)
-                self.Diffimg = cv2.absdiff(self.BGimg, self.WVimg)
-                cv2.imshow('DifferenceImage',self.Diffimg)
+                self.Diffimg = cv2.absdiff(self.BGimg_1, self.WVimg)
+                self.diff_scaled = cv2.normalize(self.Diffimg, None, self.minIntensity, self.maxIntensity, norm_type=cv2.NORM_MINMAX)
+                cv2.imshow('DifferenceImage',self.diff_scaled)
                 cv2.waitKey(1)
-                self.counter=0
+                self.counter=2
+            else:
+                self.BGimg_2 = image
+                cv2.imshow("BGimg_2",self.BGimg_2)
+                cv2.waitKey(1)
+                self.counter=0    
+            
         else:
             cv2.imshow("Live", image)
+            cv2.waitKey(1)
 
     def saveImage(self, output_directory):
-        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\BGimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "BGimg"+".tif", append=True)
-        tiff.save(data=self.BGimg,  # np.ushort image data array from the camera
+        tiff = tifffile.TiffWriter(output_directory + os.sep +str(self.FILECOUNTER).zfill(2)+".tif", append=True)
+        tiff.save(data=self.BGimg_1,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
                              (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
         )
-        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\WVimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "WVimg"+".tif", append=True)
+        tiff = tifffile.TiffWriter(output_directory + os.sep +str(self.FILECOUNTER).zfill(2)+".tif", append=True)
         tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
                              (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
         )
-        tiff = tifffile.TiffWriter("O:\ou-mt\Mitarbeiter\Albert\Pictures\Diffimg" + os.sep +str(self.FILECOUNTER).zfill(2)+ "Diffimg"+".tif", append=True)
-        tiff.save(data=self.WVimg,  # np.ushort image data array from the camera
+        tiff = tifffile.TiffWriter(output_directory + os.sep +str(self.FILECOUNTER).zfill(2)+".tif", append=True)
+        tiff.save(data=self.BGimg_2,  # np.ushort image data array from the camera
+                  compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
+                  extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
+                             (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
+        )
+        tiff = tifffile.TiffWriter(output_directory + os.sep +str(self.FILECOUNTER).zfill(2)+".tif", append=True)
+        tiff.save(data=self.Diffimg,  # np.ushort image data array from the camera
                   compress=0,   # amount of compression (0-9), by default it is uncompressed (0)
                   extratags=[(TAG_BITDEPTH, 'I', 1, self.camera.bit_depth, False),  # custom TIFF tag for bit depth
                              (TAG_EXPOSURE, 'I', 1, self.camera.exposure_time_us, False)]  # custom TIFF tag for exposure
         )
         self.FILECOUNTER=self.FILECOUNTER+1
+
+    def setMaxIntensity(self, maxIntensity):
+        self.maxIntensity = maxIntensity
+
+    def setMinIntensity(self, minIntensity):
+        self.minIntensity = minIntensity

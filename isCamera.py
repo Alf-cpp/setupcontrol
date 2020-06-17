@@ -24,6 +24,9 @@ class ISCamera():
         print("Exposure Auto off:   ",self.Camera.SetPropertySwitch("Exposure","Auto",0))
         print("Exposure Value set:  ",self.Camera.SetPropertyAbsoluteValue("Exposure","Value",0.01)) #Exposure time in seconds
 
+        self.maxIntensity=65536
+        self.minIntensity=0
+
         # Für Callback:
         self.ImProc = ImageProcessing()
         self.Callbackfunc = IC.TIS_GrabberDLL.FRAMEREADYCALLBACK(self.Callback)
@@ -71,14 +74,13 @@ class ISCamera():
     def setBrightness(self, value):
         print("Brightness Value Set:",self.Camera.SetPropertyValue("Brightness","Value", value))
 
-    def printParams(self):  #Zum Debggen: Zeigt, ob Parameter von der Kamera übernommen wurden oder nicht
+    def printParams(self):  #Zum Debuggen: Zeigt, ob Parameter von der Kamera übernommen wurden oder nicht
         GainValue=[0]
         error = self.Camera.GetPropertyAbsoluteValue("Gain","Value",GainValue)
         if error==1:
             print("Gain Value:      ", GainValue[0])
         else:
             print("Gain Error:      ",error)
-
         BrightnessValue=[0]
         ExposureTime=[0]
         error = self.Camera.GetPropertyAbsoluteValue("Exposure","Value",ExposureTime)
@@ -107,4 +109,11 @@ class ISCamera():
         #print("Shape pData width :", pData.width)
         #print("Shape pData BpP   :", pData.iBitsPerPixel)
         self.ImProc.imageProcess(cvMat)
+
+    def setMaxIntensity(self, maxIntensity):
+        self.maxIntensity = maxIntensity
+
+    def setMinIntensity(self, minIntensity):
+        self.minIntensity = minIntensity
+
 

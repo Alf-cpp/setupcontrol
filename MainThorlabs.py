@@ -15,13 +15,16 @@ print('#########################',datetime.datetime.now().strftime('%Y-%m-%d %H:
 
 #Paths
 os.environ['PATH'] +=r'C:\Master\setupcontrol\dlls'+os.sep+'64_lib;'
-print(os.environ['PATH'])
+
+#print(os.environ['PATH'])
 
 #_sdk = C.cdll.LoadLibrary("thorlabs_tsi_camera_sdk.dll")
 
 #Directory
 # delete image if it exists
-OUTPUT_DIRECTORY = os.path.abspath(r'.\pictures')  # Directory the TIFFs will be saved to
+OUTPUT_DIRECTORY = 'O:\ou-mt\Mitarbeiter\Albert\Pictures'  #os.path.abspath(r'.\pictures')  # Directory the TIFFs will be saved to
+os.mkdir(OUTPUT_DIRECTORY+os.sep+datetime.datetime.now().strftime('%Y-%m-%d %H.%M'))
+OUTPUT_DIRECTORY = 'O:\ou-mt\Mitarbeiter\Albert\Pictures'+os.sep+datetime.datetime.now().strftime('%Y-%m-%d %H.%M')
 FILENAME = 'image'  # The filename of the TIFF
 
 if os.path.exists(OUTPUT_DIRECTORY + os.sep + FILENAME):
@@ -41,40 +44,48 @@ tlCam = TLCamera()
 imagePath = 'O:\\ou-mt\\Mitarbeiter\\Albert\\Pictures\\'
 filecounter = 0
 
+
 #Callbackfunction for Trackbars:
-def setGain(x):
-    gain=cv2.getTrackbarPos('Gain','OptionWindow')
-    tlCam.setGain(gain)
+def setMaxIntensity(x):
+    maxIntensity=cv2.getTrackbarPos('MaxIntensity','OptionWindow')
+    tlCam.setMaxIntensity(maxIntensity)
+
+def setMinIntensity(x):
+    minIntensity=cv2.getTrackbarPos('MinIntensity','OptionWindow')
+    tlCam.setMinIntensity(minIntensity)
 
 #OptionWindow with Trackbars:
 img = np.zeros((1,1,3), np.uint8)
 cv2.namedWindow('OptionWindow', cv2.WINDOW_NORMAL)
-cv2.createTrackbar('Gain','OptionWindow',280,480, setGain)                # dB/100 = Gain (max 48 dB)
+cv2.createTrackbar('MaxIntensity','OptionWindow',65536,65536, setMaxIntensity) 
+cv2.createTrackbar('MinIntensity','OptionWindow',0,65536, setMinIntensity)
 cv2.imshow('OptionWindow',img)
 
 while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('t'):
         tlCam.setSingleTriggerMode()
-        trig.singleTriggerSettings()
-        trig.settingsShutterClosed()
+        trig.singleTriggerSettings()    
+        trig.settingsShutterClosed()    #1.: BG Image
         trig.trigger()
         tlCam.snapImg()
-        trig.settingsShutterOpen()
+        trig.settingsShutterOpen()      #2.: Wave Image 
+        trig.trigger()
+        tlCam.snapImg()
+        trig.settingsShutterClosed()    #3.: 2tes BG Image
         trig.trigger()
         tlCam.snapImg()
     if key == ord('s'):
         tlCam.saveImage(OUTPUT_DIRECTORY)     
     if key == ord('a'):
-        trig.setContinous()
-        tlCam.setContinuousTriggerMode()
-        tlCam.snapImg()
-        time.sleep(0.01)
-        tlCam.snapImg()
         while(True):
             key = cv2.waitKey(1) & 0xFF
+            trig.settingsShutterClosed()
+            trig.trigger()
             tlCam.snapImg()
-            time.sleep(0.01)
+            trig.settingsShutterOpen()
+            trig.trigger()
+            tlCam.snapImg()
             if key == ord('q'):
                 key=1
                 break
